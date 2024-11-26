@@ -13,6 +13,11 @@ def load_data():
         st.warning("Please upload a CSV file to proceed.")
         return None
 
+# Function to display conclusions
+def display_conclusion(description):
+    st.write("### Conclusion")
+    st.info(description)
+
 # Title and description
 st.title("Data Science Job Role Salary Analysis")
 st.write("""
@@ -38,6 +43,8 @@ if df is not None:
         average_salary_per_year = df.groupby("work_year")["salary_in_usd"].mean()
         st.write("### Average Salary Trend (2020–2024)")
         st.line_chart(average_salary_per_year)
+        conclusion = f"The average salary has {'increased' if average_salary_per_year.diff().mean() > 0 else 'decreased'} over the years, with a notable {'rise' if average_salary_per_year.diff().mean() > 0 else 'drop'} in recent years."
+        display_conclusion(conclusion)
 
     # Question 2: Top Paying Job Titles
     elif selection == "Top Paying Job Titles":
@@ -47,73 +54,70 @@ if df is not None:
         st.bar_chart(top_5_highest)
         st.write("### Top 5 Lowest-Paying Job Titles")
         st.bar_chart(top_5_lowest)
+        conclusion = (
+            f"The top-paying job titles include {', '.join(top_5_highest.index)}, "
+            f"while {', '.join(top_5_lowest.index)} are among the lowest-paying roles."
+        )
+        display_conclusion(conclusion)
 
     # Question 3: Salary by Experience Level
     elif selection == "Salary by Experience":
         average_salary_by_experience = df.groupby("experience_level")["salary_in_usd"].mean()
         st.write("### Average Salary by Experience Level")
         st.bar_chart(average_salary_by_experience)
+        conclusion = (
+            f"Salaries generally {'increase' if average_salary_by_experience.is_monotonic else 'vary'} with experience level, "
+            f"with {average_salary_by_experience.idxmax()} roles offering the highest pay on average."
+        )
+        display_conclusion(conclusion)
 
     # Question 4: Highest Paying Locations
     elif selection == "Highest Paying Locations":
         top_5_locations = df.groupby("company_location")["salary_in_usd"].mean().nlargest(5)
         st.write("### Top 5 Highest Paying Locations")
         st.bar_chart(top_5_locations)
+        conclusion = f"The highest-paying locations include {', '.join(top_5_locations.index)}."
+        display_conclusion(conclusion)
 
     # Question 5: Salary by Work Model
     elif selection == "Salary by Work Model":
-        average_salary_by_work_model = df.groupby("work_models")["salary_in_usd"].mean()
+        average_salary_by_work_model = df.groupby("work_model")["salary_in_usd"].mean()
         st.write("### Average Salary by Work Model")
         st.bar_chart(average_salary_by_work_model)
+        conclusion = (
+            f"{average_salary_by_work_model.idxmax()} work models offer the highest average salaries, "
+            f"while {average_salary_by_work_model.idxmin()} models have the lowest."
+        )
+        display_conclusion(conclusion)
 
     # Question 6: Employment Type vs Salary
     elif selection == "Employment Type vs Salary":
         average_salary_by_employment_type = df.groupby("employment_type")["salary_in_usd"].mean()
         st.write("### Average Salary by Employment Type")
         st.bar_chart(average_salary_by_employment_type)
+        conclusion = (
+            f"{average_salary_by_employment_type.idxmax()} employment types offer the highest pay, "
+            f"indicating that employment type significantly impacts salary."
+        )
+        display_conclusion(conclusion)
 
     # Question 7: Company Size and Salary
     elif selection == "Company Size and Salary":
         average_salary_by_company_size_job = df.groupby(["company_size", "job_title"])["salary_in_usd"].mean().unstack()
         st.write("### Average Salary by Company Size and Job Title")
-        st.bar_chart(average_salary_by_company_size_job)
+        st.dataframe(average_salary_by_company_size_job)
+        conclusion = (
+            f"Larger companies tend to pay {'more' if df.groupby('company_size')['salary_in_usd'].mean()['L'] > df.groupby('company_size')['salary_in_usd'].mean()['S'] else 'less'} than smaller ones."
+        )
+        display_conclusion(conclusion)
 
     # Question 8: Larger Companies vs Smaller Companies
     elif selection == "Larger Companies vs Smaller Companies":
         average_salary_by_company_size = df.groupby("company_size")["salary_in_usd"].mean()
         st.write("### Average Salary by Company Size")
         st.bar_chart(average_salary_by_company_size)
-    
-
-# Sample data (you can replace this with your actual dataset)
-data = {'Category': ['A', 'B', 'C', 'D'],
-        'Value': [25, 40, 55, 70]}
-df = pd.DataFrame(data)
-
-# Streamlit App Layout
-st.title("Bar Chart with Data Labels")
-
-# Plot the bar chart using Seaborn
-st.subheader("Bar Chart with Labels on Top")
-plt.figure(figsize=(8, 6))
-
-# Create the bar plot
-ax = sns.barplot(x='Category', y='Value', data=df)
-
-# Add labels on top of the bars
-for p in ax.patches:
-    ax.annotate(f'{p.get_height()}',  # Text to display (the height of the bar)
-                (p.get_x() + p.get_width() / 2, p.get_height()),  # Position (center of the bar)
-                ha='center', va='center',  # Text alignment
-                fontsize=10, color='black',  # Font size and color
-                xytext=(0, 5),  # Offset text 5 units above the bar
-                textcoords='offset points')
-
-# Customize the plot
-ax.set_title('Bar Chart with Labels on Top')
-ax.set_xlabel('Categories')
-ax.set_ylabel('Values')
-
-# Display the plot in Streamlit
-st.pyplot(plt)
-
+        conclusion = (
+            f"On average, larger companies offer {'higher' if average_salary_by_company_size.idxmax() == 'L' else 'lower'} salaries "
+            f"than smaller companies."
+        )
+        display_conclusion(conclusion)
