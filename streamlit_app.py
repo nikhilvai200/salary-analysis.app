@@ -120,30 +120,5 @@ if df is not None:
             f"On average, larger companies offer {'higher' if average_salary_by_company_size.idxmax() == 'L' else 'lower'} salaries "
             f"than smaller companies."
         )
-        def load_data():
-    uploaded_file = st.file_uploader("Upload your CSV data", type=["csv"])
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        return df
-    else:
-        st.warning("Please upload a CSV file to proceed.")
-        return None
-
-# Function to display conclusions
-def display_conclusion(description):
-    st.write("### Conclusion")
-    st.info(description)
-
-# Title and description
-st.title("Data Science Job Role Salary Analysis")
-st.write("""
-    This app provides an analysis of data science job role salaries from 2020 to 2024, 
-    including insights into job titles, experience levels, company locations, work models, 
-    and more.
-""")
-
-# Sidebar for selecting different analysis options
-st.sidebar.title("Filter Options")
-year_filter = st.sidebar.multiselect("Filter by Year", [])
-job_title_filter = st.sidebar.multiselect("Filter by Job Title",  [])
+        
         display_conclusion(conclusion)
