@@ -83,3 +83,37 @@ if df is not None:
         average_salary_by_company_size = df.groupby("company_size")["salary_in_usd"].mean()
         st.write("### Average Salary by Company Size")
         st.bar_chart(average_salary_by_company_size)
+    
+
+# Sample data (you can replace this with your actual dataset)
+data = {'Category': ['A', 'B', 'C', 'D'],
+        'Value': [25, 40, 55, 70]}
+df = pd.DataFrame(data)
+
+# Streamlit App Layout
+st.title("Bar Chart with Data Labels")
+
+# Plot the bar chart using Seaborn
+st.subheader("Bar Chart with Labels on Top")
+plt.figure(figsize=(8, 6))
+
+# Create the bar plot
+ax = sns.barplot(x='Category', y='Value', data=df)
+
+# Add labels on top of the bars
+for p in ax.patches:
+    ax.annotate(f'{p.get_height()}',  # Text to display (the height of the bar)
+                (p.get_x() + p.get_width() / 2, p.get_height()),  # Position (center of the bar)
+                ha='center', va='center',  # Text alignment
+                fontsize=10, color='black',  # Font size and color
+                xytext=(0, 5),  # Offset text 5 units above the bar
+                textcoords='offset points')
+
+# Customize the plot
+ax.set_title('Bar Chart with Labels on Top')
+ax.set_xlabel('Categories')
+ax.set_ylabel('Values')
+
+# Display the plot in Streamlit
+st.pyplot(plt)
+
