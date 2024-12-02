@@ -142,5 +142,11 @@ if uploaded_file is not None:
         ax.set_ylabel("Average Salary (USD)", fontsize=12)
         ax.legend(title="Job Titles", bbox_to_anchor=(1.05, 1), loc="upper left")
         ax.grid(axis="y", linestyle="--", alpha=0.7)
+        # Add the data labels
         for p in ax.patches:
-            ax.annotate(f"${p.get_height():,.0f}", (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', fontsize=10, color="black", xytext=(0, 
+            ax.annotate(f"${p.get_height():,.0f}", (p.get_x() + p.get_width() / 2., p.get_height()),
+                        ha='center', va='center', fontsize=10, color="black", xytext=(0, 5), textcoords="offset points")
+        st.pyplot(fig)
+
+else:
+    st.write("Please upload a CSV file to get started.")
