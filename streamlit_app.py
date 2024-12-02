@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 # Function to load data
 @st.cache
 def load_data(uploaded_file):
