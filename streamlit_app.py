@@ -19,7 +19,7 @@ if uploaded_file is not None:
     df = load_data(uploaded_file)
 
     # Move the dropdown to the left sidebar
-    chart_type = st.sidebar.selectbox(
+    chart_type = st.sidebar.radio(  # Use radio to fully restrict input to predefined options
         "Select the chart to display",
         [
             "Average Salary Trend (2020–2024)",
